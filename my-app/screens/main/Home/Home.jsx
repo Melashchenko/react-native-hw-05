@@ -73,11 +73,19 @@ export default function Home({ navigation }) {
         }}
       />
       <Tab.Screen
-        name="Create"
+        name="Create post"
         component={CreatePostsScreen}
         options={{
           tabBarIcon: ({ color, size, focused }) => (
             <Feather name="plus" color={color} size={24} />
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate("Posts")}
+            >
+              <Icon size={24} name="arrow-left" color="#BDBDBD" />
+            </TouchableOpacity>
           ),
         }}
       />
