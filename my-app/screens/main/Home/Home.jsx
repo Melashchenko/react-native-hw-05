@@ -62,6 +62,7 @@ export default function Home({ navigation }) {
           tabBarIcon: ({ color, size, focused }) => (
             <Feather name="grid" color={color} size={24} />
           ),
+
           headerRight: () => (
             <TouchableOpacity
               activeOpacity={0.8}
@@ -70,6 +71,7 @@ export default function Home({ navigation }) {
               <Icon size={24} name="log-out" color="#BDBDBD" />
             </TouchableOpacity>
           ),
+          headerShown: false,
         }}
       />
       <Tab.Screen

@@ -1,50 +1,30 @@
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, FlatList } from "react-native";
+import DefaultScreenPosts from "../../nested/DefaultScreenPosts/DefaultScreenPosts";
+import MapScreen from "../../nested/MapScreen/MapScreen";
+import CommentsScreen from "../../nested/CommentsScreen/CommentsScreen";
 
-export default function PostsScreen({ route }) {
-  const [posts, setPosts] = useState([]);
+const Stack = createNativeStackNavigator();
 
-  useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
-
+export default function PostsScreen() {
   return (
-    <View style={styles.container}>
-      <View style={styles.profileImg}>
-        <Image
-          source={require("../../../assets/images/Rectangle.jpg")}
-          style={{ height: 60, width: 60 }}
-        />
-      </View>
-      <FlatList
-        data={posts}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View style={styles.postContainer}>
-            <Image
-              source={{ uri: item.photo }}
-              style={{ height: 240, borderRadius: 8 }}
-            />
-          </View>
-        )}
+    <Stack.Navigator>
+      <Stack.Screen
+        name="DefaultScreen"
+        component={DefaultScreenPosts}
+        options={{
+          headerTitle: {
+            color: "#212121",
+            fontFamily: "ChakraPetch-Regular",
+            fontSize: 17,
+            lineHeight: 22,
+            letterSpacing: -0.408,
+          },
+        }}
       />
-    </View>
+      <Stack.Screen name="Map" component={MapScreen} />
+      <Stack.Screen name="Comments" component={CommentsScreen} />
+    </Stack.Navigator>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: 32,
-    paddingHorizontal: 16,
-  },
-  postContainer: {
-    marginBottom: 32,
-  },
-  profileImg: {
-    marginBottom: 32,
-  },
-});

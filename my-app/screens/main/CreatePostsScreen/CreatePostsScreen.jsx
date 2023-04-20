@@ -1,41 +1,108 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Button,
+} from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import Icon from "react-native-vector-icons/Feather";
-import { useState } from "react";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 
 export default function CreatePostsScreen({ navigation }) {
   const [camera, setCamera] = useState(null);
   const [photo, setPhoto] = useState("");
+  const [type, setType] = useState(CameraType.front);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+
+  const [location, setLocation] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS === "android" && !Device.isDevice) {
+        setErrorMsg(
+          "Oops, this will not work on Snack in an Android Emulator. Try it on your device!"
+        );
+        return;
+      }
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+  }, []);
+
+  // let text = "Waiting..";
+  // if (errorMsg) {
+  //   return (text = errorMsg);
+  // }
+  // else if (location) {
+  //   text = JSON.stringify(location);
+  // }
+
+  if (!permission) {
+    // Camera permissions are still loading
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: "center" }}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
+
+  function toggleCameraType() {
+    setType((current) =>
+      current === CameraType.back ? CameraType.front : CameraType.back
+    );
+  }
 
   const takePhoto = async () => {
-    const snapData = await camera.takePictureAsync();
-    const location = await Location.getCurrentPositionAsync();
-    console.log(location);
-    setPhoto(snapData.uri);
+    const { uri } = await camera.takePictureAsync();
+
+    setPhoto(uri);
   };
 
   const sendPhoto = () => {
-    navigation.navigate("Posts", { photo });
+    if (!photo) {
+      return;
+    }
+    navigation.navigate("DefaultScreen", { photo });
+    setPhoto("");
+    console.log(location);
+    console.log(errorMsg);
   };
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} ref={setCamera}>
-        {/* {photo && (
-          <View style={styles.takePhotoContainer}>
-            <Image
-              source={{ uri: photo }}
-              style={{ height: 100, width: 100 }}
-            />
-          </View>
-        )} */}
+      <Camera style={styles.camera} ref={setCamera} type={type}>
         <TouchableOpacity
           style={styles.snap}
           activeOpacity={0.8}
           onPress={takePhoto}
         >
           <Icon size={20} name="camera" color="#BDBDBD" />
+        </TouchableOpacity>
+        <TouchableOpacity style={{ marginTop: 50 }} onPress={toggleCameraType}>
+          <MaterialCommunityIcons
+            size={20}
+            name="camera-flip"
+            color="#BDBDBD"
+          />
         </TouchableOpacity>
       </Camera>
 
