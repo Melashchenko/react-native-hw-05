@@ -5,10 +5,12 @@ import {
   TouchableOpacity,
   Image,
   Button,
+  TextInput,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import Icon from "react-native-vector-icons/Feather";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 
@@ -60,6 +62,7 @@ export default function CreatePostsScreen({ navigation }) {
         <Text style={{ textAlign: "center" }}>
           We need your permission to show the camera
         </Text>
+
         <Button onPress={requestPermission} title="grant permission" />
       </View>
     );
@@ -105,7 +108,39 @@ export default function CreatePostsScreen({ navigation }) {
           />
         </TouchableOpacity>
       </Camera>
+      <View>
+        <Text style={styles.imgText}>Download photo</Text>
+      </View>
+      <View>
+        <TextInput style={styles.input} placeholder="Name" />
 
+        <View>
+          <TextInput
+            style={{
+              height: 50,
+
+              borderBottomWidth: 1,
+              borderColor: "#E8E8E8",
+
+              marginBottom: 16,
+              color: "#212121",
+              fontFamily: "ChakraPetch-Regular",
+              fontStyle: "normal",
+
+              fontSize: 16,
+              lineHeight: 19,
+              paddingHorizontal: 24,
+            }}
+            placeholder="Location"
+          />
+          <SimpleLineIcons
+            style={styles.icon}
+            size={20}
+            name="location-pin"
+            color="#BDBDBD"
+          />
+        </View>
+      </View>
       <View>
         <TouchableOpacity
           activeOpacity={0.8}
@@ -133,6 +168,7 @@ const styles = StyleSheet.create({
     // borderColor: "#E8E8E8",
     // backgroundColor: "#F6F6F6",
     alignItems: "center",
+    marginBottom: 8,
   },
   snap: {
     marginTop: 90,
@@ -151,6 +187,37 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#fff",
   },
+
+  imgText: {
+    marginBottom: 16,
+    color: "#BDBDBD",
+    fontFamily: "ChakraPetch-Regular",
+    fontStyle: "normal",
+
+    fontSize: 16,
+    lineHeight: 19,
+  },
+
+  input: {
+    height: 50,
+
+    borderBottomWidth: 1,
+    borderColor: "#E8E8E8",
+
+    marginBottom: 16,
+    color: "#212121",
+    fontFamily: "ChakraPetch-Regular",
+    fontStyle: "normal",
+
+    fontSize: 16,
+    lineHeight: 19,
+  },
+
+  icon: {
+    position: "absolute",
+    top: 14,
+  },
+
   btn: {
     height: 51,
 
